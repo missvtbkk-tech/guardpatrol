@@ -1108,8 +1108,25 @@
                                  loading="lazy"
                                  referrerPolicy="no-referrer"
                                  onError={(e) => {
+                                   const currentSrc = e.target.src;
+                                   const svgPlaceholder = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
+                                   
+                                   if (currentSrc.includes('thumbnail?id=')) {
+                                      const match = currentSrc.match(/id=([^&]+)/);
+                                      if(match) {
+                                         e.target.src = `https://drive.google.com/uc?id=${match[1]}`;
+                                         return;
+                                      }
+                                   }
+                                   if (currentSrc.includes('uc?id=')) {
+                                      const match = currentSrc.match(/id=([^&]+)/);
+                                      if(match) {
+                                         e.target.src = `https://lh3.googleusercontent.com/d/${match[1]}`;
+                                         return;
+                                      }
+                                   }
                                    e.target.onerror = null; 
-                                   e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>'; 
+                                   e.target.src = svgPlaceholder; 
                                  }}
                                />
                              )
@@ -1318,7 +1335,27 @@
                             {selectedRecord.photos.map((pic, pIdx) => {
                                const displayUrl = getDisplayImageUrl(pic);
                                if (!displayUrl || displayUrl.trim() === '') return null;
-                               return <img key={pIdx} src={displayUrl} className="w-full aspect-square object-cover rounded-xl border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity" onClick={() => window.open(pic)} alt="patrol" referrerPolicy="no-referrer" />
+                               return <img key={pIdx} src={displayUrl} className="w-full aspect-square object-cover rounded-xl border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity" onClick={() => window.open(pic)} alt="patrol" referrerPolicy="no-referrer" onError={(e) => {
+                                   const currentSrc = e.target.src;
+                                   const svgPlaceholder = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
+                                   
+                                   if (currentSrc.includes('thumbnail?id=')) {
+                                      const match = currentSrc.match(/id=([^&]+)/);
+                                      if(match) {
+                                         e.target.src = `https://drive.google.com/uc?id=${match[1]}`;
+                                         return;
+                                      }
+                                   }
+                                   if (currentSrc.includes('uc?id=')) {
+                                      const match = currentSrc.match(/id=([^&]+)/);
+                                      if(match) {
+                                         e.target.src = `https://lh3.googleusercontent.com/d/${match[1]}`;
+                                         return;
+                                      }
+                                   }
+                                   e.target.onerror = null; 
+                                   e.target.src = svgPlaceholder; 
+                                 }} />
                             })}
                           </div>
                         ) : (
